@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:color_notes/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,6 +18,22 @@ class NotesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notes'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const ProfileScreen(
+                  name: 'Mohammad',
+                  email: 'mohammadisniceandgood',
+                  imageUrl: 'imageUrl',
+                ),
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.person,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {

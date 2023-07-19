@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-import '/models/note_color.dart';
+import '/auth/firestore_auth.dart';
 import '/models/note.dart';
+import '/models/note_color.dart';
+import '/params/add_note_params.dart';
 
 class AddEditNoteScreen extends StatefulWidget {
   const AddEditNoteScreen({
@@ -21,55 +21,65 @@ class AddEditNoteScreen extends StatefulWidget {
 }
 
 class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
+  // flags
+  bool isEditable = false;
+
+  // note properties
+  String? id;
+  String? posterId;
+  DateTime? dateCreated;
   late final TextEditingController _titleController;
-  late final TextEditingController _bodyController;
+  late final TextEditingController _textController;
   late final FocusNode _titleFocusNode;
   late final FocusNode _bodyFocusNode;
-
-  bool isEditable = false;
 
   void makeEditable() {
     setState(() => isEditable = true);
   }
 
-  Future addEditNote() async {
-    // if we're adding a note
-    final uid = const Uuid().v1();
-    final posterId = FirebaseAuth.instance.currentUser!.uid;
-    final now = DateTime.now();
-
-    // Create a note
-    Note note = Note(
-      id: uid,
-      title: _titleController.text.trim(),
-      text: _bodyController.text.trim(),
-      color: 'yellow',
-      posterId: posterId,
-      dateCreated: now,
-      dateUpdated: now,
+  addUpdateNote() async {
+    if (id == null && dateCreated == null) {
+      id = const Uuid().v1();
+      dateCreated = DateTime.now();
+    }
+    await FirestoreAuth().addUpdateNote(
+      params: AddNoteParams(
+        id: id,
+        posterId: posterId,
+        dateCreated: dateCreated,
+        title: _titleController.text.trim(),
+        text: _textController.text.trim(),
+      ),
     );
+  }
 
-    // Post the note to Firestore
-    FirebaseFirestore.instance.collection('notes').doc(uid).set(note.toMap());
+  Future deleteNote() async {
+    await FirestoreAuth().deleteNote(id!);
+    Navigator.of(context).pop();
   }
 
   @override
   void initState() {
     super.initState();
     _titleController = TextEditingController();
-    _bodyController = TextEditingController();
+    _textController = TextEditingController();
     _titleFocusNode = FocusNode();
     _bodyFocusNode = FocusNode();
+
+    // If we're updating a note
     if (widget.note != null && widget.color != null) {
       _titleController.text = widget.note!.title;
-      _bodyController.text = widget.note!.text;
+      _textController.text = widget.note!.text;
+      id = widget.note!.id;
+      posterId = widget.note!.posterId;
+      dateCreated = widget.note!.dateCreated;
     }
   }
 
   @override
   void dispose() {
     super.dispose();
-    _bodyController.dispose();
+    _textController.dispose();
     _titleController.dispose();
   }
 
@@ -107,15 +117,21 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
               ? Colors.deepPurple
               : widget.color!.headerColor,
           actions: [
+            id != null
+                ? IconButton(
+                    onPressed: deleteNote,
+                    icon: const Icon(Icons.delete),
+                  )
+                : const SizedBox(),
             IconButton(
               onPressed: () async {
                 setState(() {
                   isEditable = false;
                 });
-                await addEditNote();
+                await addUpdateNote();
               },
               icon: const Icon(Icons.save),
-            )
+            ),
           ],
         ),
         body: Container(
@@ -130,7 +146,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
             },
             child: TextField(
               focusNode: _bodyFocusNode,
-              controller: _bodyController,
+              controller: _textController,
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w400,

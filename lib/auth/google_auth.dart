@@ -1,3 +1,4 @@
+import 'package:color_notes/constansts/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -13,6 +14,8 @@ class GoogleAuth {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+
+      dummy_user = user;
 
       auth.signInWithCredential(credential);
     } catch (e) {
