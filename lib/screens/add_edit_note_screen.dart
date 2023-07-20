@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 
 import '/auth/firestore_auth.dart';
 import '/models/note.dart';
 import '/models/note_color.dart';
 import '/params/add_note_params.dart';
+import '/widgets/title_text_field.dart';
 
 class AddEditNoteScreen extends StatefulWidget {
   const AddEditNoteScreen({
@@ -31,7 +31,6 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   DateTime? dateCreated;
   late final TextEditingController _titleController;
   late final TextEditingController _textController;
-  late final FocusNode _titleFocusNode;
   late final FocusNode _bodyFocusNode;
 
   void makeEditable() {
@@ -65,7 +64,6 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     super.initState();
     _titleController = TextEditingController();
     _textController = TextEditingController();
-    _titleFocusNode = FocusNode();
     _bodyFocusNode = FocusNode();
 
     // If we're updating a note
@@ -94,15 +92,9 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
         appBar: AppBar(
           // title text field
           title: TitleTextField(
-            onTap: () => FocusScope.of(context).requestFocus(_titleFocusNode),
+            onSubmitted: (_) =>
+                FocusScope.of(context).requestFocus(_bodyFocusNode),
             titleController: _titleController,
-            titleFocusNode: _titleFocusNode,
-            onDoubleTap: () {
-              makeEditable();
-            },
-            onSubmitted: (_) {
-              FocusScope.of(context).requestFocus(_bodyFocusNode);
-            },
             isEditable: isEditable,
           ),
           backgroundColor: widget.color == null
@@ -131,84 +123,22 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
           width: size.width,
           height: size.height,
           color: widget.color == null ? Colors.purple : widget.color!.bodyColor,
-          child: GestureDetector(
-            onTap: () {
-              if (!isEditable) {
-                Fluttertoast.showToast(msg: 'Double tap to edit the note');
-              } else {
-                FocusScope.of(context).requestFocus(_bodyFocusNode);
-              }
-            },
-            onDoubleTap: () {
-              makeEditable();
-              FocusScope.of(context).requestFocus(_bodyFocusNode);
-            },
-            child: TextField(
-              focusNode: _bodyFocusNode,
-              controller: _textController,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w400,
-              ),
-              // enabled: isEnabled,
-              maxLines: null,
-              enabled: isEditable,
-              readOnly: !isEditable,
-              keyboardType: TextInputType.multiline,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-              ),
+          child: TextField(
+            focusNode: _bodyFocusNode,
+            controller: _textController,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w400,
+            ),
+            // enabled: isEnabled,
+            maxLines: null,
+            enabled: isEditable,
+            readOnly: !isEditable,
+            keyboardType: TextInputType.multiline,
+            decoration: const InputDecoration(
+              border: InputBorder.none,
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class TitleTextField extends StatelessWidget {
-  const TitleTextField({
-    super.key,
-    required this.titleController,
-    required this.titleFocusNode,
-    required this.onSubmitted,
-    required this.onDoubleTap,
-    required this.isEditable,
-    required this.onTap,
-  });
-
-  final TextEditingController titleController;
-  final Function(String text)? onSubmitted;
-  final VoidCallback onDoubleTap;
-  final FocusNode titleFocusNode;
-  final VoidCallback onTap;
-  final bool isEditable;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      // on double tap works fine
-      onTap: onTap,
-      onDoubleTap: onDoubleTap,
-      child: Container(
-        height: 45,
-        color: isEditable
-            ? const Color.fromRGBO(255, 255, 255, 1)
-            : Colors.transparent,
-        child: TextField(
-          autofocus: true,
-          focusNode: titleFocusNode,
-          controller: titleController,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w500,
-          ),
-          readOnly: !isEditable,
-          enabled: isEditable,
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-          ),
-          onSubmitted: onSubmitted,
         ),
       ),
     );
