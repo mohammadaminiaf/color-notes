@@ -24,12 +24,12 @@ class ProfileScreen extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 30,
-                backgroundImage: NetworkImage(dummy_user!.photoUrl ?? ''),
+                backgroundImage: NetworkImage(dummyUser!.photoUrl ?? ''),
               ),
               const SizedBox(height: 20),
-              Text(dummy_user!.displayName!),
+              Text(dummyUser!.displayName!),
               const SizedBox(height: 20),
-              Text(dummy_user!.email),
+              Text(dummyUser!.email),
               const SizedBox(height: 20, width: double.infinity),
             ],
           ),

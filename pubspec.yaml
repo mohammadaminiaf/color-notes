@@ -10,12 +10,18 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  # Firebase related
   firebase_core: ^2.15.0
   firebase_auth: ^4.7.0
   cloud_firestore: ^4.8.3
   firebase_storage: ^11.2.5
   google_sign_in: ^6.1.4
+
+  # generate id
   uuid: ^3.0.7
+
+  # show toast message
+  fluttertoast: ^8.2.2
 
 dev_dependencies:
   flutter_test:

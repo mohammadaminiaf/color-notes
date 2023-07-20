@@ -1,5 +1,6 @@
 import 'package:color_notes/constansts/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleAuth {
@@ -15,11 +16,11 @@ class GoogleAuth {
         idToken: googleAuth.idToken,
       );
 
-      dummy_user = user;
+      dummyUser = user;
 
       auth.signInWithCredential(credential);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }
