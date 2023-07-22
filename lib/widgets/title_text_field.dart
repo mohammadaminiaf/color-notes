@@ -15,6 +15,10 @@ class TitleTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // padding: const EdgeInsets.only(
+      //   left: 5,
+      //   right: 5,
+      // ),
       height: 45,
       color: isEditable
           ? const Color.fromRGBO(255, 255, 255, 1)
@@ -23,11 +27,10 @@ class TitleTextField extends StatelessWidget {
         readOnly: !isEditable,
         controller: titleController,
         style: const TextStyle(
-          fontSize: 24,
+          fontSize: 21,
           fontWeight: FontWeight.w500,
+          color: Colors.black,
         ),
-        // readOnly: !isEditable,
-        // enabled: isEditable,
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),

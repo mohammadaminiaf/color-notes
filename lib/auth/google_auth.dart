@@ -37,10 +37,14 @@ class GoogleAuth {
     }
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getCurrentUser() async {
-    return await FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .get();
+  Future<bool> signOut() async {
+    try {
+      FirebaseAuth.instance.signOut();
+      GoogleSignIn().signOut();
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
   }
 }

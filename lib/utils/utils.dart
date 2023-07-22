@@ -1,5 +1,6 @@
 import 'dart:math' as math show Random;
 
+import 'package:color_notes/constansts/random_sizes.dart';
 import 'package:flutter/material.dart';
 
 import '/constansts/random_colors.dart';
@@ -10,6 +11,13 @@ NoteColor getRandomColor() {
   final randomNumber = math.Random().nextInt(max);
 
   return colors[randomNumber];
+}
+
+double getRandomSize() {
+  final max = randomSizes.length;
+  final randomNumber = math.Random().nextInt(max);
+
+  return randomSizes[randomNumber];
 }
 
 Future<bool?> showDeleteDialog({

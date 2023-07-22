@@ -1,3 +1,4 @@
+import 'package:color_notes/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +23,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.dark().copyWith(),
+      themeMode: ThemeMode.dark,
       home: StreamBuilder(
         stream: FirebaseAuth.instance.userChanges(),
         builder: (context, snapshot) {
@@ -37,7 +36,7 @@ class MyApp extends StatelessWidget {
             return const LoginScreen();
           }
 
-          return const NotesScreen();
+          return const HomeScreen();
         },
       ),
     );

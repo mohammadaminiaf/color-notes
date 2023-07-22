@@ -23,6 +23,9 @@ dependencies:
   # show toast message
   fluttertoast: ^8.2.2
 
+  # styling dates
+  intl: ^0.18.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -30,3 +33,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/logos/

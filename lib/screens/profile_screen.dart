@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 
+import '/auth/firestore_auth.dart';
 import '/auth/google_auth.dart';
 import '/models/user.dart';
+import '/screens/login_screen.dart';
 import '/widgets/loader.dart';
 import '/widgets/user_profile_pic.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
     super.key,
-    required this.name,
-    required this.email,
-    required this.imageUrl,
   });
-
-  final String? imageUrl;
-  final String? name;
-  final String email;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: GoogleAuth().getCurrentUser(),
+        future: FirestoreAuth().getCurrentUser(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loader();
+          }
+
+          if (!snapshot.hasData) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (_) => const LoginScreen(),
+              ),
+            );
           }
 
           final userData = snapshot.data;
@@ -74,6 +77,12 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20, width: double.infinity),
+                    ElevatedButton(
+                      onPressed: () {
+                        GoogleAuth().signOut();
+                      },
+                      child: const Text('Sign out'),
+                    ),
                   ],
                 ),
               ),

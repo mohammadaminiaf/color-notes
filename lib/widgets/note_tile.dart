@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '/models/note.dart';
 import '/screens/add_edit_note_screen.dart';
@@ -14,7 +15,6 @@ class NoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     final color = getRandomColor();
     return InkWell(
       onTap: () {
@@ -28,34 +28,42 @@ class NoteTile extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.all(3.0),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
           color: color.headerColor,
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(10),
         ),
-        width: size.width * 0.45,
-        height: size.height * 0.45,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Text(
-              note.title,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+        width: 100,
+        height: 100,
+        child: Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                note.title,
+                style: const TextStyle(
+                  fontSize: 21,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.start,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
               ),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              note.text,
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+              const SizedBox(height: 1),
+              Text(
+                DateFormat('MMM dd, yyyy').format(note.dateUpdated),
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );

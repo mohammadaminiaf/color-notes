@@ -53,6 +53,14 @@ class FirestoreAuth {
         .snapshots();
   }
 
+  // Get user from firestore
+  Future<DocumentSnapshot<Map<String, dynamic>>> getCurrentUser() async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .get();
+  }
+
   Future addNote({
     required String title,
     required String text,
@@ -86,16 +94,6 @@ class FirestoreAuth {
     required String text,
     required String title,
   }) async {
-    // Note newNote = Note(
-    //   id: oldNote.id,
-    //   text: text,
-    //   title: title,
-    //   color: oldNote.color,
-    //   posterId: oldNote.posterId,
-    //   dateCreated: oldNote.dateCreated,
-    //   dateUpdated: oldNote.dateUpdated,
-    // );
-
     try {
       FirebaseFirestore.instance.collection('notes').doc(id).set(
         {
