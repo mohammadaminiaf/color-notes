@@ -1,3 +1,4 @@
+import 'package:color_notes/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -53,12 +54,6 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     );
   }
 
-  Future deleteNote() async {
-    await FirestoreAuth().deleteNote(id!).then((isSuccess) {
-      if (isSuccess) Navigator.of(context).pop();
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -102,20 +97,29 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
               : widget.color!.headerColor,
           actions: [
             id != null
-                ? IconButton(
-                    onPressed: deleteNote,
-                    icon: const Icon(Icons.delete),
+                ? DeleteButton(
+                    id: id!,
                   )
                 : const SizedBox(),
-            IconButton(
-              onPressed: () async {
-                setState(() {
-                  isEditable = false;
-                });
-                await addUpdateNote();
-              },
-              icon: const Icon(Icons.save),
-            ),
+            isEditable
+                ? IconButton(
+                    onPressed: () async {
+                      setState(() {
+                        isEditable = false;
+                      });
+                      await addUpdateNote();
+                    },
+                    icon: const Icon(Icons.save),
+                  )
+                : const SizedBox(),
+            isEditable
+                ? const SizedBox()
+                : IconButton(
+                    onPressed: () {
+                      makeEditable();
+                    },
+                    icon: const Icon(Icons.edit),
+                  ),
           ],
         ),
         body: Container(
@@ -124,16 +128,15 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
           height: size.height,
           color: widget.color == null ? Colors.purple : widget.color!.bodyColor,
           child: TextField(
+            autofocus: true,
+            readOnly: !isEditable,
             focusNode: _bodyFocusNode,
             controller: _textController,
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w400,
             ),
-            // enabled: isEnabled,
             maxLines: null,
-            enabled: isEditable,
-            readOnly: !isEditable,
             keyboardType: TextInputType.multiline,
             decoration: const InputDecoration(
               border: InputBorder.none,
@@ -141,6 +144,35 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DeleteButton extends StatelessWidget {
+  const DeleteButton({
+    super.key,
+    required this.id,
+  });
+
+  final String id;
+
+  Future deleteNote(BuildContext context) async {
+    showDeleteDialog(context: context, text: 'Deleting the node...');
+    await FirestoreAuth().deleteNote(id).then((isSuccess) {
+      if (isSuccess) {
+        // one to get out of the dialog
+        Navigator.of(context).pop();
+        // one to get pop the screen
+        Navigator.of(context).pop();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => deleteNote(context),
+      icon: const Icon(Icons.delete),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '/models/note.dart';
@@ -41,6 +42,15 @@ class FirestoreAuth {
       debugPrint(e.toString());
       return false;
     }
+  }
+
+  // Get all notes
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAllNotes() {
+    return FirebaseFirestore.instance
+        .collection('notes')
+        .where('posterId', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .orderBy('dateUpdated', descending: true)
+        .snapshots();
   }
 
   Future addNote({

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:color_notes/auth/firestore_auth.dart';
 import 'package:color_notes/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -47,13 +48,11 @@ class NotesScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(3.0),
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('notes')
-              .where('posterId',
-                  isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-              .snapshots(),
-          builder: (context,
-              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          stream: FirestoreAuth().getAllNotes(),
+          builder: (
+            context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+          ) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Loader();
             }

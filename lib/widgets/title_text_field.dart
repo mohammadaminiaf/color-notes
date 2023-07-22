@@ -20,7 +20,7 @@ class TitleTextField extends StatelessWidget {
           ? const Color.fromRGBO(255, 255, 255, 1)
           : Colors.transparent,
       child: TextField(
-        autofocus: true,
+        readOnly: !isEditable,
         controller: titleController,
         style: const TextStyle(
           fontSize: 24,
