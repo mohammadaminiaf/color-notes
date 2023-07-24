@@ -7,9 +7,11 @@ class PickColorButton extends StatelessWidget {
   const PickColorButton({
     super.key,
     required this.onTap,
+    required this.color,
   });
 
   final Function(int? index) onTap;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class PickColorButton extends StatelessWidget {
       child: Container(
         width: 35,
         height: 35,
-        color: colors[1].bodyColor,
+        color: color,
       ),
     );
   }

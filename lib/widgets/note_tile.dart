@@ -32,37 +32,33 @@ class NoteTile extends StatelessWidget {
           color: colors[note.colorIndex].headerColor,
           borderRadius: BorderRadius.circular(10),
         ),
-        width: 100,
-        height: 100,
-        child: Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                note.title,
-                style: const TextStyle(
-                  fontSize: 21,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.start,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              note.title,
+              style: const TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
               ),
-              const SizedBox(height: 1),
-              Text(
-                DateFormat('MMM dd, yyyy').format(note.dateUpdated),
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                ),
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+            const SizedBox(height: 1),
+            Text(
+              DateFormat('MMM dd, yyyy').format(note.dateUpdated),
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.white,
               ),
-            ],
-          ),
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ),
       ),
     );

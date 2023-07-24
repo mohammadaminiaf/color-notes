@@ -109,6 +109,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
                           setState(() {});
                         }
                       },
+                      color: colors[colorIndex].bodyColor,
                     ),
 
                     // save button

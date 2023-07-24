@@ -30,7 +30,7 @@ class Notebook extends StatelessWidget {
             CustomPaint(
               painter: NotebookPagePainter(),
               child: SingleChildScrollView(
-                child: Container(
+                child: Padding(
                   // height: MediaQuery.of(context).size.height,
                   padding: const EdgeInsets.only(top: 5, left: 12, right: 12),
                   child: CustomTextField(
@@ -62,7 +62,7 @@ class NotebookPagePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     const lineSpacing = 30.0; // Adjust the line spacing as needed
-    final linesCount = ((size.height + 22) ~/ lineSpacing) + 1;
+    final linesCount = ((size.height + 22) ~/ lineSpacing) + 100;
 
     for (int i = 0; i < linesCount; i++) {
       final y = i * lineSpacing;
@@ -102,7 +102,7 @@ class CustomTextField extends StatelessWidget {
       maxLines: null,
       textAlignVertical: TextAlignVertical.top,
       style: const TextStyle(
-        fontSize: 25,
+        fontSize: 23,
         fontWeight: FontWeight.normal,
         color: Colors.black,
         height: 1.2, // Adjust the height for line spacing
