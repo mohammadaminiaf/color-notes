@@ -6,7 +6,12 @@ class Empty extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Feels so empty! add a Note!'),
+      child: Text(
+        'Feels so empty! add a Note!',
+        style: TextStyle(
+          fontSize: 24,
+        ),
+      ),
     );
   }
 }

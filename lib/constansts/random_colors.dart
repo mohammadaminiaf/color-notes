@@ -2,34 +2,14 @@ import 'package:flutter/material.dart';
 
 import '/models/note_color.dart';
 
-const randomColors = <NoteColor>[
-  // Yellow
-  NoteColor(headerColor: Colors.yellow, bodyColor: Colors.yellowAccent),
-  // Blue
-  NoteColor(headerColor: Colors.blue, bodyColor: Colors.lightBlue),
-  // Green
-  NoteColor(headerColor: Colors.green, bodyColor: Colors.lightGreen),
-  // Pink
-  NoteColor(headerColor: Colors.pink, bodyColor: Colors.pinkAccent),
-  // Purple
-  NoteColor(headerColor: Colors.purple, bodyColor: Colors.purpleAccent),
-  // orange
-  NoteColor(headerColor: Colors.orange, bodyColor: Colors.orangeAccent),
-  // Red
-  NoteColor(headerColor: Colors.red, bodyColor: Colors.redAccent),
-  // Teal
-  NoteColor(headerColor: Colors.teal, bodyColor: Colors.tealAccent),
-];
-
 const List<NoteColor> colors = [
   NoteColor(bodyColor: bodyRed, headerColor: headerRed),
   NoteColor(bodyColor: bodyOrange, headerColor: headerOrange),
   NoteColor(bodyColor: bodyGreen, headerColor: headerGreen),
   NoteColor(bodyColor: bodyBlue, headerColor: headerBlue),
   NoteColor(bodyColor: bodyPurple, headerColor: headerPurple),
-  // NoteColor(bodyColor: bodyBlack, headerColor: headerBlack),
   NoteColor(bodyColor: bodyGrey, headerColor: headerGrey),
-  // NoteColor(bodyColor: bodyWhite, headerColor: headerWhite),
+  NoteColor(bodyColor: bodyYellow, headerColor: headerYellow),
 ];
 
 const headerRed = Color(0xffF77581);

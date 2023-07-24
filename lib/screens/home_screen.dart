@@ -1,7 +1,7 @@
-import 'package:color_notes/screens/notes_screen.dart';
-import 'package:color_notes/screens/profile_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '/screens/notes_screen.dart';
+import '/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

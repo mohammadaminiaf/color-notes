@@ -1,9 +1,10 @@
+import 'package:color_notes/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '/constansts/random_colors.dart';
 import '/models/note.dart';
 import '/screens/add_edit_note_screen.dart';
-import '/utils/utils.dart';
 
 class NoteTile extends StatelessWidget {
   const NoteTile({
@@ -15,14 +16,12 @@ class NoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = getRandomColor();
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => AddEditNoteScreen(
               note: note,
-              color: color,
             ),
           ),
         );
@@ -30,7 +29,7 @@ class NoteTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: color.headerColor,
+          color: colors[note.colorIndex].headerColor,
           borderRadius: BorderRadius.circular(10),
         ),
         width: 100,

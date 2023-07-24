@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:color_notes/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '/auth/firestore_auth.dart';
-import '/auth/google_auth.dart';
 import '/models/note.dart';
 import '/screens/add_edit_note_screen.dart';
-import '/screens/profile_screen.dart';
 import '/widgets/empty.dart';
 import '/widgets/loader.dart';
 import '/widgets/note_tile.dart';
@@ -49,8 +46,10 @@ class NotesScreen extends StatelessWidget {
               return const Loader();
             }
 
-            if (!snapshot.hasData) {
-              return const Empty();
+            if (snapshot.hasData) {
+              if (snapshot.data!.docs.isEmpty) {
+                return const Empty();
+              }
             }
 
             return GridView.builder(
@@ -85,15 +84,3 @@ class NotesScreen extends StatelessWidget {
     );
   }
 }
-
-// TODO: Find a better place for this
-/*
-
-IconButton(
-            onPressed: () {
-              GoogleAuth().signOut();
-            },
-            icon: const Icon(Icons.logout),
-          ),
-
-          */

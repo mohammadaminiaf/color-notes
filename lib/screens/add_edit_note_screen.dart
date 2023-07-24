@@ -1,23 +1,22 @@
+import 'package:color_notes/notebook.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import '/auth/firestore_auth.dart';
 import '/constansts/random_colors.dart';
 import '/models/note.dart';
-import '/models/note_color.dart';
 import '/params/add_note_params.dart';
-import '/utils/utils.dart';
+import '/widgets/delete_button.dart';
+import '/widgets/pick_color_button.dart';
 import '/widgets/title_text_field.dart';
 
 class AddEditNoteScreen extends StatefulWidget {
   const AddEditNoteScreen({
     super.key,
     this.note,
-    this.color,
   });
 
   final Note? note;
-  final NoteColor? color;
 
   @override
   State<AddEditNoteScreen> createState() => _AddEditNoteScreenState();
@@ -30,6 +29,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   // note properties
   String? id;
   String? posterId;
+  int colorIndex = 6;
   DateTime? dateCreated;
   late final TextEditingController _titleController;
   late final TextEditingController _textController;
@@ -40,10 +40,12 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
   }
 
   addUpdateNote() async {
+    // if we're adding a task
     if (id == null && dateCreated == null) {
       id = const Uuid().v1();
       dateCreated = DateTime.now();
     }
+    // save data to firestore
     await FirestoreAuth().addUpdateNote(
       params: AddNoteParams(
         id: id,
@@ -51,6 +53,7 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
         dateCreated: dateCreated,
         title: _titleController.text.trim(),
         text: _textController.text.trim(),
+        colorIndex: colorIndex,
       ),
     );
   }
@@ -63,13 +66,14 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
     _bodyFocusNode = FocusNode();
 
     // If we're updating a note
-    if (widget.note != null && widget.color != null) {
+    if (widget.note != null) {
       isEditable = false;
       _titleController.text = widget.note!.title;
       _textController.text = widget.note!.text;
       id = widget.note!.id;
       posterId = widget.note!.posterId;
       dateCreated = widget.note!.dateCreated;
+      colorIndex = widget.note!.colorIndex;
     }
   }
 
@@ -92,86 +96,82 @@ class _AddEditNoteScreenState extends State<AddEditNoteScreen> {
           titleController: _titleController,
           isEditable: isEditable,
         ),
-        backgroundColor:
-            widget.color == null ? headerYellow : widget.color!.headerColor,
+        backgroundColor: colors[colorIndex].headerColor,
         actions: [
-          id != null
-              ? DeleteButton(
-                  id: id!,
-                )
-              : const SizedBox(),
           isEditable
-              ? IconButton(
-                  onPressed: () async {
-                    setState(() {
-                      isEditable = false;
-                    });
-                    await addUpdateNote();
-                  },
-                  icon: const Icon(Icons.save),
+              ? Row(
+                  children: [
+                    // pick color button
+                    PickColorButton(
+                      onTap: (int? index) {
+                        if (index != null) {
+                          colorIndex = index;
+                          setState(() {});
+                        }
+                      },
+                    ),
+
+                    // save button
+                    IconButton(
+                      onPressed: () async {
+                        setState(() {
+                          isEditable = false;
+                        });
+                        await addUpdateNote();
+                      },
+                      icon: const Icon(Icons.save),
+                    ),
+                  ],
                 )
-              : const SizedBox(),
-          isEditable
-              ? const SizedBox()
-              : IconButton(
-                  onPressed: () {
-                    makeEditable();
-                  },
-                  icon: const Icon(Icons.edit),
+              : Row(
+                  children: [
+                    // delete button
+                    id != null
+                        ? DeleteButton(
+                            id: id!,
+                          )
+                        : const SizedBox.shrink(),
+
+                    // edit button
+                    IconButton(
+                      onPressed: () {
+                        makeEditable();
+                      },
+                      icon: const Icon(Icons.edit),
+                    ),
+                  ],
                 ),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.all(8.0),
-        width: size.width,
-        height: size.height,
-        color: widget.color == null ? bodyYellow : widget.color!.bodyColor,
-        child: TextField(
-          autofocus: true,
-          readOnly: !isEditable,
-          focusNode: _bodyFocusNode,
-          controller: _textController,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w400,
-            color: Colors.black,
-          ),
-          maxLines: null,
-          keyboardType: TextInputType.multiline,
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-          ),
-        ),
+      body: Notebook(
+        color: colors[colorIndex].bodyColor,
+        autoFocus: true,
+        readOnly: !isEditable,
+        focusNode: _bodyFocusNode,
+        controller: _textController,
       ),
-    );
-  }
-}
-
-class DeleteButton extends StatelessWidget {
-  const DeleteButton({
-    super.key,
-    required this.id,
-  });
-
-  final String id;
-
-  Future deleteNote(BuildContext context) async {
-    showDeleteDialog(context: context, text: 'Deleting the node...');
-    await FirestoreAuth().deleteNote(id).then((isSuccess) {
-      if (isSuccess) {
-        // one to get out of the dialog
-        Navigator.of(context).pop();
-        // one to get pop the screen
-        Navigator.of(context).pop();
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () => deleteNote(context),
-      icon: const Icon(Icons.delete),
+      // body: Container(
+      //   padding: const EdgeInsets.all(8.0),
+      //   width: size.width,
+      //   height: size.height,
+      //   color: colors[colorIndex].bodyColor,
+      //   child: TextField(
+      //     autofocus: true,
+      //     readOnly: !isEditable,
+      //     focusNode: _bodyFocusNode,
+      //     controller: _textController,
+      //     style: const TextStyle(
+      //       fontSize: 24,
+      //       fontWeight: FontWeight.w400,
+      //       color: Colors.black,
+      //     ),
+      //     maxLines: null,
+      //     keyboardType: TextInputType.multiline,
+      //     decoration: const InputDecoration(
+      //       border: InputBorder.none,
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

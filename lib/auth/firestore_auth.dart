@@ -16,7 +16,7 @@ class FirestoreAuth {
       id: params.id!,
       text: params.text.trim(),
       title: params.title.trim(),
-      color: 'yellow',
+      colorIndex: params.colorIndex,
       posterId: FirebaseAuth.instance.currentUser!.uid,
       dateCreated: params.dateCreated!,
       dateUpdated: DateTime.now(),
@@ -62,8 +62,9 @@ class FirestoreAuth {
   }
 
   Future addNote({
-    required String title,
     required String text,
+    required String title,
+    required int colorIndex,
   }) async {
     // if we're adding a note
     final uid = const Uuid().v1();
@@ -75,10 +76,10 @@ class FirestoreAuth {
       id: uid,
       text: text,
       title: title,
-      color: 'yellow',
-      posterId: posterId,
       dateCreated: now,
       dateUpdated: now,
+      posterId: posterId,
+      colorIndex: colorIndex,
     );
 
     try {
